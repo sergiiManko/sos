@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: sos
+server:
+  port: 8181
