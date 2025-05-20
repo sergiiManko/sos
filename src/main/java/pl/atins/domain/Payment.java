@@ -2,9 +2,12 @@ package pl.atins.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "payment")
 public class Payment extends BaseEntity {
-    private Double amount;
+    private BigDecimal amount;
     private LocalDateTime paymentDate;
     private String paymentMethod;
     private String referenceCode;

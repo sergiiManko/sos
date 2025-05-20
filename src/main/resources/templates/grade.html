@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>SOS | Grade</title>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
+  <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}"/>
+  <link rel="stylesheet"
+        href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+  <link rel="stylesheet" th:href="@{/adminlte/dist/css/adminlte.min.css}"/>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+  <div th:replace="~{header.html :: header}"></div>
+  <div th:replace="~{menu.html :: menu}"></div>
+  <div class="content-wrapper">
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Grades</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Grades</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">My grades</h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body p-0">
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th style="width: 10px">#</th>
+              <th>Subject</th>
+              <th>Teacher</th>
+              <th style="width: 40px">Grade</th>
+              <th>Comment</th>
+              <th th:width="100px"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>1</td>
+              <td>Technical Writing</td>
+              <td>mgr. John Doe</td>
+              <td>5.0</td>
+              <td>Some comment</td>
+              <td class="project-actions text-right">
+                <a class="btn btn-primary btn-sm" href="#">
+                  <i class="fas fa-folder">
+                  </i>
+                  View
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Intro to Computer Science</td>
+              <td>Dr. Smith Kol</td>
+              <td>4.0</td>
+              <td>Some comment</td>
+              <td class="project-actions text-right">
+                <a class="btn btn-primary btn-sm" href="#">
+                  <i class="fas fa-folder">
+                  </i>
+                  View
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Linear Algebra</td>
+              <td>Dr. Johnson Red</td>
+              <td>4.5</td>
+              <td>Some comment</td>
+              <td class="project-actions text-right">
+                <a class="btn btn-primary btn-sm" href="#">
+                  <i class="fas fa-folder">
+                  </i>
+                  View
+                </a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-tools">
+          <ul class="pagination pagination-sm float-left">
+            <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+          </ul>
+        </div>
+        <!-- /.card-body -->
+      </div>
+    </section>
+  </div>
+  <div th:replace="~{footer.html :: footer}"></div>
+</div>
+</body>
+<th:block th:insert="~{script::content}">&nbsp;</th:block>
+</html>
