@@ -73,13 +73,6 @@ $(function () {
                 allDay: true
             },
             {
-                title: 'Long Event',
-                start: new Date(y, m, d - 5),
-                end: new Date(y, m, d - 2),
-                backgroundColor: '#f39c12', //yellow
-                borderColor: '#f39c12' //yellow
-            },
-            {
                 title: 'Computer Science',
                 start: new Date(y, m, d, 10, 30),
                 allDay: false,
