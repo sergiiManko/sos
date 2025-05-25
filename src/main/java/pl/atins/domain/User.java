@@ -1,11 +1,6 @@
 package pl.atins.domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -25,7 +20,9 @@ import java.util.Objects;
 @Setter
 @ToString(exclude = "role", callSuper = true)
 @Table(name = "users")
-public class User extends BaseEntity implements UserDetails {
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+public abstract class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
     private String firstName;
