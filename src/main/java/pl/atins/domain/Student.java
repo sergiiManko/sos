@@ -3,6 +3,8 @@ package pl.atins.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,6 +37,10 @@ public class Student extends User {
     private String studentNumber;
 
     private String titleOfGrade;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
 
     @Override
     public boolean equals(Object o) {
