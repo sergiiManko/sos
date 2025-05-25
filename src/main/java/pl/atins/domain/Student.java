@@ -26,15 +26,15 @@ import java.util.Set;
 @Table(name = "student")
 @DiscriminatorValue("STUDENT")
 public class Student extends User {
-    private int agreementNum;
-    private double avgScore;
-    private int currentSemester;
+    private String agreementNum;
+    private Double avgScore;
+    private Integer currentSemester;
     private LocalDate dateGraduation;
-    private int enrollmentYear;
-    private int enrollSemester;
+    private Integer enrollmentYear;
+    private Integer enrollSemester;
     private String faculty;
     private String modeOfStudy;
-    private boolean scholarshipHolder;
+    private Boolean scholarshipHolder;
     private String specialization;
 
     @Column(unique = true)

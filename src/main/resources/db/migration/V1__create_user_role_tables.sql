@@ -22,6 +22,7 @@ create table if not exists users
     created_at         timestamp    not null default now(),
     updated_at         timestamp    not null default now(),
     role_id            bigint,
+    user_type          varchar(31)  not null,
     constraint pk_user primary key (id),
     constraint fk_user foreign key (role_id) references role (id)
 );

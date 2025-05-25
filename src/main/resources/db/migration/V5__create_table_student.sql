@@ -2,7 +2,7 @@
 create table if not exists student
 (
     id                 bigserial        not null,
-    agreement_num      serial           not null,
+    agreement_num      varchar(50)      not null,
     avg_score          double precision not null,
     current_semester   int              not null,
     date_graduation    date             not null,

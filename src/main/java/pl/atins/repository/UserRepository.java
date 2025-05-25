@@ -14,12 +14,10 @@ import java.util.Optional;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
     Optional<User> findByEmail(String email);
 
     @Modifying
     @Transactional
     @Query("UPDATE User u SET u.failedAttempt = 0, u.lockTime = null, u.accountNonLocked = true WHERE u.id = :userId")
     void unlockUser(Long userId);
-
 }
