@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -41,6 +44,19 @@ public class Teacher extends User {
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
+
+    @ManyToMany(mappedBy = "teachers")
+    private Set<Subject> subjects = new HashSet<>();
+
+    public void addSubject(Subject subject) {
+        subjects.add(subject);
+        subject.getTeachers().add(this);
+    }
+
+    public void removeSubject(Subject subject) {
+        subjects.remove(subject);
+        subject.getTeachers().remove(this);
+    }
 
     @Override
     public boolean equals(Object o) {
