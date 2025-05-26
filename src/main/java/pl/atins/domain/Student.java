@@ -49,15 +49,26 @@ public class Student extends User {
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Loan> loans = new HashSet<>();
 
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Enrollment> enrollments = new HashSet<>();
+
+    public void addEnrollment(Enrollment enrollment) {
+        enrollments.add(enrollment);
+        enrollment.setStudent(this);
+    }
+
+    public void removeEnrollment(Enrollment enrollment) {
+        enrollments.remove(enrollment);
+        enrollment.setStudent(null);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Student student = (Student) o;
-        return Objects.equals(studentNumber, student.studentNumber) &&
-                Objects.equals(faculty, student.faculty) &&
-                Objects.equals(specialization, student.specialization);
+        return Objects.equals(studentNumber, student.studentNumber) && Objects.equals(faculty, student.faculty) && Objects.equals(specialization, student.specialization);
     }
 
     @Override
@@ -68,10 +79,19 @@ public class Student extends User {
     @Override
     public String toString() {
         return "Student{" +
-                "studentNumber='" + studentNumber + '\'' +
-                ", fullName='" + getFullName() + '\'' +
+                "agreementNum='" + agreementNum + '\'' +
+                ", avgScore=" + avgScore +
+                ", currentSemester=" + currentSemester +
+                ", dateGraduation=" + dateGraduation +
+                ", enrollmentYear=" + enrollmentYear +
+                ", enrollSemester=" + enrollSemester +
                 ", faculty='" + faculty + '\'' +
+                ", modeOfStudy='" + modeOfStudy + '\'' +
+                ", scholarshipHolder=" + scholarshipHolder +
                 ", specialization='" + specialization + '\'' +
+                ", studentNumber='" + studentNumber + '\'' +
+                ", titleOfGrade='" + titleOfGrade + '\'' +
+                ", department=" + department +
                 '}';
     }
 }
