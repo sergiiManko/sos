@@ -9,9 +9,6 @@ import pl.atins.domain.User;
 
 import java.util.Optional;
 
-/**
- * @author Serhii Manko
- */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);

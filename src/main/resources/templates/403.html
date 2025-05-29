@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SOS | Access Denied</title>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
+    <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}"/>
+    <link rel="stylesheet"
+          href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+    <link rel="stylesheet" th:href="@{/adminlte/dist/css/adminlte.min.css}"/>
+</head>
+<body class="hold-transition">
+<div class="wrapper">
+    <section class="content">
+        <div class="error-page" style="margin-top: 100px;">
+            <h2 class="headline text-danger">403</h2>
+
+            <div class="error-content">
+                <h3><i class="fas fa-exclamation-triangle text-danger"></i> Access Denied!</h3>
+                <p>
+                    You do not have permission to access this page.
+                    Meanwhile, you may <a th:href="@{/}">return to dashboard</a>.
+                </p>
+            </div>
+        </div>
+    </section>
+</div>
+<script th:src="@{/adminlte/plugins/jquery/jquery.min.js}"></script>
+<script th:src="@{/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/adminlte/dist/js/adminlte.min.js}"></script>
+</body>
+</html>

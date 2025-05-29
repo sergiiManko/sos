@@ -21,6 +21,10 @@ import java.util.Objects;
 @Table(name = "enrollment")
 public class Enrollment extends BaseEntity {
 
+    public static final String STATUS_ENROLLED = "ENROLLED";
+    public static final String STATUS_WAITLISTED = "WAITLISTED";
+    public static final String STATUS_DROPPED = "DROPPED";
+
     @Column(name = "enrollment_date", nullable = false)
     private LocalDate enrollmentDate;
 
