@@ -1,6 +1,7 @@
 package pl.atins.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import pl.atins.service.EnrollmentService;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/enrollments")
@@ -30,7 +32,13 @@ public class EnrollmentController {
             List<EnrollmentDTO> enrollments = enrollmentService.getStudentEnrollments();
             List<SubjectDTO> availableSubjects = enrollmentService.getAvailableSubjects();
 
-            // Extract IDs of subjects the student is already enrolled in
+            // Extract IDs of subjects the student is already actively enrolled in or waitlisted
+            List<Long> activeEnrolledSubjectIds = enrollments.stream()
+                    .filter(e -> !"DROPPED".equals(e.getStatus()))
+                    .map(e -> e.getSubject().getId())
+                    .collect(Collectors.toList());
+
+            // Also include all enrollment IDs for reference
             List<Long> enrolledSubjectIds = enrollments.stream()
                     .map(e -> e.getSubject().getId())
                     .collect(Collectors.toList());
@@ -38,6 +46,7 @@ public class EnrollmentController {
             model.addAttribute("enrollments", enrollments);
             model.addAttribute("availableSubjects", availableSubjects);
             model.addAttribute("enrolledSubjectIds", enrolledSubjectIds);
+            model.addAttribute("activeEnrolledSubjectIds", activeEnrolledSubjectIds);
             return "enrollment";
         } catch (StudentNotFoundException e) {
             return "redirect:/403";

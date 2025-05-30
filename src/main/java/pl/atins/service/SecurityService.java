@@ -1,50 +1,36 @@
 package pl.atins.service;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import pl.atins.domain.Student;
-import pl.atins.exception.StudentNotFoundException;
-import pl.atins.repository.StudentRepository;
+import pl.atins.domain.User;
 import pl.atins.repository.UserRepository;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class SecurityService {
 
-    private final StudentRepository studentRepository;
+    private final EntityManager entityManager;
     private final UserRepository userRepository;
 
-    public Student getCurrentStudent() {
+    public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             return null;
         }
 
-        boolean isStudent = authentication.getAuthorities().stream()
-                .anyMatch(authority -> "ROLE_STUDENT".equals(authority.getAuthority()));
+        String username = authentication.getName();
+        User baseUser = userRepository.findByEmail(username).orElse(null);
 
-        if (!isStudent) {
+        if (baseUser == null) {
             return null;
         }
 
-        String username = authentication.getName();
-        Optional<Student> studentOpt = studentRepository.findByEmail(username);
-
-        return studentOpt.orElseGet(() -> userRepository.findByEmail(username)
-                .flatMap(user -> studentRepository.findById(user.getId()))
-                .orElse(null));
-
-    }
-
-    public Student getCurrentStudentOrThrow() {
-        Student student = getCurrentStudent();
-        if (student == null) {
-            throw new StudentNotFoundException("Current user is not a student");
-        }
-        return student;
+        return entityManager.find(entityManager.getMetamodel()
+                        .entity(User.class)
+                        .getJavaType(),
+                baseUser.getId());
     }
 }

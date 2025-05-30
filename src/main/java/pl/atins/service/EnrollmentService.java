@@ -8,7 +8,6 @@ import pl.atins.domain.Student;
 import pl.atins.domain.Subject;
 import pl.atins.dto.EnrollmentDTO;
 import pl.atins.dto.SubjectDTO;
-import pl.atins.exception.StudentNotFoundException;
 import pl.atins.repository.EnrollmentRepository;
 import pl.atins.repository.SubjectRepository;
 
@@ -27,16 +26,15 @@ public class EnrollmentService {
 
     @Transactional(readOnly = true)
     public List<EnrollmentDTO> getStudentEnrollments() {
-        try {
-            Student student = securityService.getCurrentStudent();
+        var currentUser = securityService.getCurrentUser();
+        if (currentUser instanceof Student student) {
             List<Enrollment> enrollments = enrollmentRepository.findByStudent(student);
 
             return enrollments.stream()
                     .map(EnrollmentDTO::fromEntity)
                     .collect(Collectors.toList());
-        } catch (StudentNotFoundException e) {
-            return List.of(); // Return empty list if no student found
         }
+        return List.of();
     }
 
     @Transactional(readOnly = true)
@@ -50,60 +48,59 @@ public class EnrollmentService {
 
     @Transactional
     public void enrollInSubject(Long subjectId) {
-        Student student = securityService.getCurrentStudentOrThrow();
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow();
-
-        Optional<Enrollment> existingEnrollment = enrollmentRepository.findByStudentAndSubject(student, subject);
-
-        if (existingEnrollment.isPresent()) {
-            Enrollment enrollment = existingEnrollment.get();
-            if (Enrollment.STATUS_DROPPED.equals(enrollment.getStatus())) {
-                enrollment.setStatus(Enrollment.STATUS_ENROLLED);
-                enrollment.setEnrollmentDate(LocalDate.now());
-                enrollmentRepository.save(enrollment);
-            }
-        } else {
-            Enrollment enrollment = new Enrollment();
-            enrollment.setStudent(student);
-            enrollment.setSubject(subject);
-            enrollment.setStatus(Enrollment.STATUS_ENROLLED);
-            enrollment.setEnrollmentDate(LocalDate.now());
-            enrollmentRepository.save(enrollment);
-        }
+        Optional.ofNullable(securityService.getCurrentUser())
+                .filter(Student.class::isInstance)
+                .map(Student.class::cast)
+                .flatMap(student -> subjectRepository.findById(subjectId)
+                        .map(subject ->
+                                enrollmentRepository.findByStudentAndSubject(student, subject)
+                                        .orElseGet(() -> {
+                                            Enrollment e = new Enrollment();
+                                            e.setStudent(student);
+                                            e.setSubject(subject);
+                                            return e;
+                                        })
+                        )
+                        .map(enrollment -> {
+                            enrollment.setStatus(Enrollment.STATUS_ENROLLED);
+                            enrollment.setEnrollmentDate(LocalDate.now());
+                            return enrollment;
+                        })).ifPresent(enrollmentRepository::save);
     }
+
 
     @Transactional
     public void joinWaitlist(Long subjectId) {
-        Student student = securityService.getCurrentStudentOrThrow();
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow();
-
-        Optional<Enrollment> existingEnrollment = enrollmentRepository.findByStudentAndSubject(student, subject);
-
-        if (existingEnrollment.isPresent()) {
-            Enrollment enrollment = existingEnrollment.get();
-            if (Enrollment.STATUS_DROPPED.equals(enrollment.getStatus())) {
+        var currentUser = securityService.getCurrentUser();
+        if (currentUser instanceof Student student) {
+            Subject subject = subjectRepository.findById(subjectId).orElseThrow();
+            Optional<Enrollment> existingEnrollment = enrollmentRepository.findByStudentAndSubject(student, subject);
+            existingEnrollment.ifPresentOrElse((enrollment) -> {
+                if (Enrollment.STATUS_DROPPED.equals(enrollment.getStatus())) {
+                    enrollment.setStatus(Enrollment.STATUS_WAITLISTED);
+                    enrollment.setEnrollmentDate(LocalDate.now());
+                    enrollmentRepository.save(enrollment);
+                }
+            }, () -> {
+                Enrollment enrollment = new Enrollment();
+                enrollment.setStudent(student);
+                enrollment.setSubject(subject);
                 enrollment.setStatus(Enrollment.STATUS_WAITLISTED);
                 enrollment.setEnrollmentDate(LocalDate.now());
                 enrollmentRepository.save(enrollment);
-            }
-        } else {
-            Enrollment enrollment = new Enrollment();
-            enrollment.setStudent(student);
-            enrollment.setSubject(subject);
-            enrollment.setStatus(Enrollment.STATUS_WAITLISTED);
-            enrollment.setEnrollmentDate(LocalDate.now());
-            enrollmentRepository.save(enrollment);
+            });
         }
     }
 
     @Transactional
     public void dropEnrollment(Long enrollmentId) {
-        Student student = securityService.getCurrentStudentOrThrow();
-        Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElseThrow();
-
-        if (enrollment.getStudent().getId().equals(student.getId())) {
-            enrollment.setStatus(Enrollment.STATUS_DROPPED);
-            enrollmentRepository.save(enrollment);
+        var currentUser = securityService.getCurrentUser();
+        if (currentUser instanceof Student student) {
+            Enrollment enrollment = enrollmentRepository.findById(enrollmentId).orElseThrow();
+            if (enrollment.getStudent().getId().equals(student.getId())) {
+                enrollment.setStatus(Enrollment.STATUS_DROPPED);
+                enrollmentRepository.save(enrollment);
+            }
         }
     }
 }

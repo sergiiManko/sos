@@ -1,7 +1,7 @@
 -- Create student table
 create table if not exists student
 (
-    id                 bigserial        not null,
+    id bigint not null,
     agreement_num      varchar(50)      not null,
     avg_score          double precision not null,
     current_semester   int              not null,
@@ -18,5 +18,6 @@ create table if not exists student
     updated_at         timestamp        not null default now(),
 
     constraint pk_student primary key (id),
+    constraint fk_student_user foreign key (id) references users (id) on delete cascade,
     constraint uq_student unique (student_number)
 );

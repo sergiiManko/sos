@@ -1,128 +1,131 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>SOS | Enrollment</title>
-  <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
-  <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}"/>
-  <link rel="stylesheet"
-        href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
-  <link rel="stylesheet" th:href="@{/adminlte/dist/css/adminlte.min.css}"/>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SOS | Enrollment</title>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
+    <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}"/>
+    <link rel="stylesheet"
+          href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+    <link rel="stylesheet" th:href="@{/adminlte/dist/css/adminlte.min.css}"/>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
-  <div th:replace="~{header.html :: header}"></div>
-  <div th:replace="~{menu.html :: menu}"></div>
-  <div class="content-wrapper">
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Enrollment</h1>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Enrollment</li>
-            </ol>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Main content -->
-    <section class="content">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">My courses</h3>
-        </div>
-        <!-- /.card-header -->
-        <div class="card-body p-0">
-          <table class="table table-striped">
-            <thead>
-            <tr>
-              <th style="width: 10px">#</th>
-              <th>Subject</th>
-              <th>Teacher</th>
-              <th>Enrollment date</th>
-              <th style="width: 40px">Status</th>
-              <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Current enrollments -->
-            <tr th:each="enrollment, stat : ${enrollments}">
-              <td th:text="${stat.count}">1</td>
-              <td th:text="${enrollment.subject.name}">Subject Name</td>
-              <td th:if="${enrollment.subject.teachers != null && not enrollment.subject.teachers.isEmpty()}"
-                  th:with="teacher=${enrollment.subject.teachers[0]}"
-                  th:text="${teacher.fullName}">Teacher Name
-              </td>
-              <td th:if="${enrollment.subject.teachers == null || enrollment.subject.teachers.isEmpty()}">No Teacher Assigned</td>
-              <td th:text="${#temporals.format(enrollment.enrollmentDate, 'MM/dd/yyyy')}">01/01/2024</td>
-              <td>
-                <span th:if="${enrollment.status == 'ENROLLED'}" class="badge bg-danger">Enrolled</span>
-                <span th:if="${enrollment.status == 'WAITLISTED'}" class="badge bg-warning">Waitlisted</span>
-                <span th:if="${enrollment.status == 'DROPPED'}" class="badge bg-success">Available</span>
-              </td>
-              <td class="project-actions text-right">
-                <form th:if="${enrollment.status == 'ENROLLED' || enrollment.status == 'WAITLISTED'}"
-                      th:action="@{/enrollments/drop/{id}(id=${enrollment.id})}" method="post">
-                  <button type="submit" class="btn btn-danger btn-sm">
-                    <i class="fas fa-trash"></i>
-                    Drop
-                  </button>
-                </form>
-              </td>
-            </tr>
-
-            <!-- Available subjects -->
-            <tr th:each="subject, stat : ${availableSubjects}" th:if="${!#lists.contains(enrolledSubjectIds, subject.id)}">
-              <td th:text="${enrollments.size() + stat.count}">2</td>
-              <td th:text="${subject.name}">Subject Name</td>
-              <td th:if="${subject.teachers != null && not subject.teachers.isEmpty()}"
-                  th:with="teacher=${subject.teachers[0]}"
-                  th:text="${teacher.fullName}">Teacher Name
-              </td>
-              <td th:if="${subject.teachers == null || subject.teachers.isEmpty()}">No Teacher Assigned</td>
-              <td>-</td>
-              <td><span class="badge bg-success">Available</span></td>
-              <td class="project-actions text-right">
-                <div class="btn-group">
-                  <form th:action="@{/enrollments/enroll/{id}(id=${subject.id})}" method="post" style="margin-right: 5px;">
-                    <button type="submit" class="btn btn-success btn-sm">
-                      <i class="fas fa-pencil-alt"></i>
-                      Enroll
-                    </button>
-                  </form>
-                  <form th:action="@{/enrollments/waitlist/{id}(id=${subject.id})}" method="post">
-                    <button type="submit" class="btn btn-warning btn-sm">
-                      <i class="fas fa-pencil-alt"></i>
-                      Join Waitlist
-                    </button>
-                  </form>
+    <div th:replace="~{header.html :: header}"></div>
+    <div th:replace="~{menu.html :: menu}"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Enrollment</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Enrollment</li>
+                        </ol>
+                    </div>
                 </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card-footer">
-          <ul class="pagination pagination-sm float-left">
-            <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-          </ul>
-        </div>
-        <!-- /.card-body -->
-      </div>
-    </section>
-  </div>
-  <div th:replace="~{footer.html :: footer}"></div>
+            </div>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">My courses</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th style="width: 10px">#</th>
+                            <th>Subject</th>
+                            <th>Teacher</th>
+                            <th>Enrollment date</th>
+                            <th style="width: 40px">Status</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Current enrollments -->
+                        <tr th:each="enrollment, stat : ${enrollments}"
+                            th:if="${enrollment.status == 'ENROLLED' || enrollment.status == 'WAITLISTED'}">
+
+
+                            <td th:text="${stat.count}">1</td>
+                            <td th:text="${enrollment.subject.name}">Subject Name</td>
+                            <td th:if="${enrollment.subject.teachers != null && not enrollment.subject.teachers.isEmpty()}"
+                                th:with="teacher=${enrollment.subject.teachers[0]}"
+                                th:text="${teacher.fullName}">Teacher Name
+                            </td>
+                            <td th:if="${enrollment.subject.teachers == null || enrollment.subject.teachers.isEmpty()}">No Teacher Assigned</td>
+                            <td th:text="${#temporals.format(enrollment.enrollmentDate, 'MM/dd/yyyy')}">01/01/2024</td>
+                            <td>
+                                <span th:if="${enrollment.status == 'ENROLLED'}" class="badge bg-danger">Enrolled</span>
+                                <span th:if="${enrollment.status == 'WAITLISTED'}" class="badge bg-warning">Waitlisted</span>
+                                <span th:if="${enrollment.status == 'DROPPED'}" class="badge bg-success">Available</span>
+                            </td>
+                            <td class="project-actions text-right">
+                                <form th:if="${enrollment.status == 'ENROLLED' || enrollment.status == 'WAITLISTED'}"
+                                      th:action="@{/enrollments/drop/{id}(id=${enrollment.id})}" method="post">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                        Drop
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        <!-- Available subjects -->
+                        <tr th:each="subject, stat : ${availableSubjects}" th:if="${!#lists.contains(activeEnrolledSubjectIds, subject.id)}">
+                            <td th:text="${enrollments.size() + stat.count}">2</td>
+                            <td th:text="${subject.name}">Subject Name</td>
+                            <td th:if="${subject.teachers != null && not subject.teachers.isEmpty()}"
+                                th:with="teacher=${subject.teachers[0]}"
+                                th:text="${teacher.fullName}">Teacher Name
+                            </td>
+                            <td th:if="${subject.teachers == null || subject.teachers.isEmpty()}">No Teacher Assigned</td>
+                            <td>-</td>
+                            <td><span class="badge bg-success">Available</span></td>
+                            <td class="project-actions text-right">
+                                <div class="btn-group">
+                                    <form th:action="@{/enrollments/enroll/{id}(id=${subject.id})}" method="post" style="margin-right: 5px;">
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            <i class="fas fa-pencil-alt"></i>
+                                            Enroll
+                                        </button>
+                                    </form>
+                                    <form th:action="@{/enrollments/waitlist/{id}(id=${subject.id})}" method="post">
+                                        <button type="submit" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-pencil-alt"></i>
+                                            Join Waitlist
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
+                    <ul class="pagination pagination-sm float-left">
+                        <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                    </ul>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </section>
+    </div>
+    <div th:replace="~{footer.html :: footer}"></div>
 </div>
 <th:block th:insert="~{script::content}">&nbsp;</th:block>
 </body>
