@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SOS | Payments</title>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
+    <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}"/>
+    <link rel="stylesheet"
+          href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+    <link rel="stylesheet" th:href="@{/adminlte/dist/css/adminlte.min.css}"/>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <div th:replace="~{header.html :: header}"></div>
+    <div th:replace="~{menu.html :: menu}"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Payments</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Payments</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Payment List</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>
+                                <a th:href="@{/payments(sort='title', direction=${reverseSortDir})}">Title</a>
+                            </th>
+                            <th>
+                                <a th:href="@{/payments(sort='amount', direction=${reverseSortDir})}">Amount</a>
+                            </th>
+                            <th>
+                                <a th:href="@{/payments(sort='paymentDate', direction=${reverseSortDir})}">Payment Date</a>
+                            </th>
+                            <th>
+                                <a th:href="@{/payments(sort='paymentMethod', direction=${reverseSortDir})}">Payment Method</a>
+                            </th>
+                            <th>
+                                <a th:href="@{/payments(sort='referenceCode', direction=${reverseSortDir})}">Reference</a>
+                            </th>
+                            <th>
+                                <a th:href="@{/payments(sort='status', direction=${reverseSortDir})}">Status</a>
+                            </th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="payment, stat : ${payments}">
+                            <td th:text="${stat.count + (currentPage * 10)}">1</td>
+                            <td th:text="${payment.title}">Tuition Fee</td>
+                            <td th:text="${#numbers.formatCurrency(payment.amount)}">$1000.00</td>
+                            <td th:text="${#temporals.format(payment.paymentDate, 'yyyy-MM-dd HH:mm')}">2023-09-01 10:00</td>
+                            <td th:text="${payment.paymentMethod}">Credit Card</td>
+                            <td th:text="${payment.referenceCode}">REF12345</td>
+                            <td>
+                                <span th:if="${payment.status == 'PAID'}" class="badge bg-success">Paid</span>
+                                <span th:if="${payment.status == 'PENDING'}" class="badge bg-warning">Pending</span>
+                                <span th:if="${payment.status == 'FAILED'}" class="badge bg-danger">Failed</span>
+                                <span th:if="${payment.status == 'REFUNDED'}" class="badge bg-info">Refunded</span>
+                            </td>
+                            <td class="project-actions text-right">
+                                <button type="button" class="btn btn-primary btn-sm view-payment-btn" th:data-id="${payment.id}">
+                                    <i class="fas fa-folder"></i>
+                                    View
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div class="card-footer clearfix">
+                    <div th:if="${totalPages > 0}" class="pagination pagination-sm m-0 float-right">
+                        <ul class="pagination">
+                            <!-- Previous button -->
+                            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                <a class="page-link" th:href="@{/payments(page=${currentPage - 1}, size=10, sort=${sort}, direction=${direction})}">&laquo;</a>
+                            </li>
+
+                            <!-- Page numbers -->
+                            <li class="page-item"
+                                th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+                                th:classappend="${pageNumber == currentPage} ? 'active'">
+                                <a class="page-link"
+                                   th:href="@{/payments(page=${pageNumber}, size=10, sort=${sort}, direction=${direction})}"
+                                   th:text="${pageNumber + 1}">1</a>
+                            </li>
+
+                            <!-- Next button -->
+                            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                                <a class="page-link" th:href="@{/payments(page=${currentPage + 1}, size=10, sort=${sort}, direction=${direction})}">&raquo;</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </section>
+
+        <!-- Payment Details Modal -->
+        <div class="modal fade" id="payment-details-modal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Payment Details</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="invoice p-3 mb-3">
+                                    <!-- Payment Title -->
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h4>
+                                                <i class="fas fa-money-check-alt"></i> <span id="payment-title">Payment Title</span>
+                                                <small class="float-right">Date: <span id="payment-date">01/01/2023</span></small>
+                                            </h4>
+                                        </div>
+                                    </div>
+
+                                    <!-- Payment Info -->
+                                    <div class="row invoice-info">
+                                        <div class="col-sm-4 invoice-col">
+                                            <b>Payment ID:</b> <span id="payment-id">#12345</span><br>
+                                            <b>Status:</b> <span id="payment-status">Paid</span><br>
+                                            <b>Reference Code:</b> <span id="payment-reference">REF12345</span><br>
+                                        </div>
+                                        <div class="col-sm-4 invoice-col">
+                                            <b>Amount:</b> <span id="payment-amount">$1000.00</span><br>
+                                            <b>Payment Method:</b> <span id="payment-method">Credit Card</span><br>
+                                        </div>
+                                    </div>
+
+                                    <!-- Additional Payment Details can be added here -->
+                                    <div class="row">
+                                        <div class="col-12 mt-3">
+                                            <h5>Payment Information</h5>
+                                            <div class="table-responsive">
+                                                <table class="table table-striped">
+                                                    <tbody>
+                                                    <tr>
+                                                        <th>Created At:</th>
+                                                        <td id="payment-created-at">2023-01-01 12:00:00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Last Updated:</th>
+                                                        <td id="payment-updated-at">2023-01-01 12:00:00</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal -->
+
+    </div>
+    <div th:replace="~{footer.html :: footer}"></div>
+</div>
+<th:block th:insert="~{script::content}">&nbsp;</th:block>
+
+<script>
+    $(function () {
+        $('.view-payment-btn').on('click', function () {
+            const paymentId = $(this).data('id');
+
+            $.ajax({
+                url: '/payments/' + paymentId,
+                type: 'GET',
+                dataType: 'json',
+                success: function (payment) {
+                    $('#payment-id').text('#' + payment.id);
+                    $('#payment-title').text(payment.title);
+                    $('#payment-date').text(new Date(payment.paymentDate).toLocaleDateString());
+                    $('#payment-amount').text('$' + payment.amount.toFixed(2));
+                    $('#payment-method').text(payment.paymentMethod);
+                    $('#payment-reference').text(payment.referenceCode);
+
+                    let statusHtml;
+                    if (payment.status === 'PAID') {
+                        statusHtml = '<span class="badge bg-success">Paid</span>';
+                    } else if (payment.status === 'PENDING') {
+                        statusHtml = '<span class="badge bg-warning">Pending</span>';
+                    } else if (payment.status === 'FAILED') {
+                        statusHtml = '<span class="badge bg-danger">Failed</span>';
+                    } else if (payment.status === 'REFUNDED') {
+                        statusHtml = '<span class="badge bg-info">Refunded</span>';
+                    } else {
+                        statusHtml = payment.status;
+                    }
+                    $('#payment-status').html(statusHtml);
+
+                    $('#payment-details-modal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching payment details:', error);
+                    alert('Error loading payment details. Please try again.');
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

@@ -38,8 +38,28 @@ VALUES (1, '2023-09-01', 'ENROLLED', 4000, 1, now(), now()),   -- Alice is enrol
        (3, '2023-09-03', 'DROPPED', 4002, 1, now(), now())     -- Alice dropped Calculus I
 ON CONFLICT DO NOTHING;
 
+-- Insert test payment data
+INSERT INTO payment (id, amount, payment_date, payment_method, reference_code, status, title, created_at, updated_at)
+VALUES (1000, 1500.00, '2023-09-01 10:15:30', 'CREDIT_CARD', 'PAY-2023-001', 'PAID', 'Tuition Fee - Fall Semester', now(), now()),
+       (1001, 300.00, '2023-09-05 14:22:10', 'BANK_TRANSFER', 'PAY-2023-002', 'PAID', 'Laboratory Fee - Chemistry', now(), now()),
+       (1002, 200.50, '2023-09-10 09:45:00', 'PAYPAL', 'PAY-2023-003', 'PAID', 'Books and Materials', now(), now()),
+       (1003, 750.00, '2023-10-01 11:30:15', 'CREDIT_CARD', 'PAY-2023-004', 'PAID', 'Dormitory Fee - October', now(), now()),
+       (1004, 50.00, '2023-10-15 16:00:00', 'CASH', 'PAY-2023-005', 'PAID', 'Student ID Replacement', now(), now()),
+       (1005, 1500.00, '2023-11-01 10:00:00', 'BANK_TRANSFER', 'PAY-2023-006', 'PENDING', 'Tuition Fee - Winter Semester', now(), now()),
+       (1006, 450.00, '2023-11-05 13:20:45', 'CREDIT_CARD', 'PAY-2023-007', 'FAILED', 'Study Trip Payment', now(), now()),
+       (1007, 120.00, '2023-11-10 09:10:30', 'PAYPAL', 'PAY-2023-008', 'PAID', 'Extra Curricular Activities', now(), now()),
+       (1008, 750.00, '2023-12-01 10:45:00', 'BANK_TRANSFER', 'PAY-2023-009', 'PAID', 'Dormitory Fee - December', now(), now()),
+       (1009, 85.50, '2023-12-12 15:30:00', 'CASH', 'PAY-2023-010', 'PAID', 'Exam Retake Fee', now(), now()),
+       (1010, 350.00, '2024-01-05 11:20:00', 'CREDIT_CARD', 'PAY-2024-001', 'PENDING', 'Laboratory Fee - Physics', now(), now()),
+       (1011, 1200.00, '2024-01-10 14:00:15', 'BANK_TRANSFER', 'PAY-2024-002', 'PAID', 'Thesis Review Fee', now(), now()),
+       (1012, 200.00, '2024-01-20 09:30:00', 'PAYPAL', 'PAY-2024-003', 'REFUNDED', 'Workshop Fee - Canceled', now(), now()),
+       (1013, 750.00, '2024-02-01 10:15:30', 'CREDIT_CARD', 'PAY-2024-004', 'PAID', 'Dormitory Fee - February', now(), now()),
+       (1014, 1500.00, '2024-02-15 13:00:00', 'BANK_TRANSFER', 'PAY-2024-005', 'PENDING', 'Tuition Fee - Spring Semester', now(), now())
+ON CONFLICT DO NOTHING;
+
 -- Set the sequence values to be higher than our manually inserted IDs to avoid conflicts
 SELECT setval('department_id_seq', 2000, false);
 SELECT setval('users_id_seq', 4000, false);
 SELECT setval('subject_id_seq', 5000, false);
 SELECT setval('enrollment_id_seq', 6000, false);
+SELECT setval('payment_id_seq', 2000, false);
