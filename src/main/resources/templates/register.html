@@ -4,11 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Sign Up</title>
+    <title>Student Registration</title>
 
     <link th:href="@{/fonts/material-icon/css/material-design-iconic-font.min.css}" rel="stylesheet">
-
     <link th:href="@{/css/style.css}" rel="stylesheet">
+    <style>
+        .form-group select {
+            width: 100%;
+            display: block;
+            border: none;
+            border-bottom: 1px solid #999;
+            padding: 6px 30px;
+            font-family: Poppins;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-group input {
+            margin-right: 8px;
+        }
+    </style>
 </head>
 <body>
 <div class="main">
@@ -16,24 +68,97 @@
         <div class="container">
             <div class="signup-content">
                 <div class="signup-form">
-                    <h2 class="form-title">Sign up</h2>
-                    <form method="POST" class="register-form" id="register-form">
-                        <div class="form-group">
-                            <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                            <input type="text" name="name" id="name" placeholder="Your Name"/>
+                    <h2 class="form-title">Student Registration</h2>
+
+                    <!-- Error message -->
+                    <div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+
+                    <form method="POST" class="register-form" id="register-form" th:action="@{/register}" th:object="${student}">
+                        <!-- Personal Information Section -->
+                        <div class="form-section">
+                            <div class="form-section-title">Personal Information</div>
+
+                            <div class="form-group">
+                                <label for="firstName"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="text" th:field="*{firstName}" id="firstName" placeholder="First Name"/>
+                                <div class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lastName"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="text" th:field="*{lastName}" id="lastName" placeholder="Last Name"/>
+                                <div class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email"><i class="zmdi zmdi-email"></i></label>
+                                <input type="email" th:field="*{email}" id="email" placeholder="Email"/>
+                                <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password"><i class="zmdi zmdi-lock"></i></label>
+                                <input type="password" th:field="*{password}" id="password" placeholder="Password"/>
+                                <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="surname"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                            <input type="text" name="surname" id="surname" placeholder="Your Surname"/>
+
+                        <!-- Academic Information Section -->
+                        <div class="form-section">
+                            <div class="form-section-title">Academic Information</div>
+
+                            <div class="form-group">
+                                <label for="faculty"><i class="zmdi zmdi-graduation-cap"></i></label>
+                                <input type="text" th:field="*{faculty}" id="faculty" placeholder="Faculty"/>
+                                <div class="error" th:if="${#fields.hasErrors('faculty')}" th:errors="*{faculty}"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="specialization"><i class="zmdi zmdi-book"></i></label>
+                                <input type="text" th:field="*{specialization}" id="specialization" placeholder="Specialization"/>
+                                <div class="error" th:if="${#fields.hasErrors('specialization')}" th:errors="*{specialization}"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="departmentId"><i class="zmdi zmdi-city"></i></label>
+                                <select th:field="*{departmentId}" id="departmentId">
+                                    <option value="">-- Select Department --</option>
+                                    <option th:each="department : ${departments}"
+                                            th:value="${department.id}"
+                                            th:text="${department.name}"></option>
+                                </select>
+                                <div class="error" th:if="${#fields.hasErrors('departmentId')}" th:errors="*{departmentId}"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="modeOfStudy"><i class="zmdi zmdi-time"></i></label>
+                                <select th:field="*{modeOfStudy}" id="modeOfStudy">
+                                    <option value="">-- Select Mode of Study --</option>
+                                    <option th:each="mode : ${studyModes}"
+                                            th:value="${mode}"
+                                            th:text="${mode}"></option>
+                                </select>
+                                <div class="error" th:if="${#fields.hasErrors('modeOfStudy')}" th:errors="*{modeOfStudy}"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="titleOfGrade"><i class="zmdi zmdi-case"></i></label>
+                                <select th:field="*{titleOfGrade}" id="titleOfGrade">
+                                    <option value="">-- Select Title of Grade --</option>
+                                    <option th:each="grade : ${gradesTitle}"
+                                            th:value="${grade}"
+                                            th:text="${grade}"></option>
+                                </select>
+                                <div class="error" th:if="${#fields.hasErrors('titleOfGrade')}" th:errors="*{titleOfGrade}"></div>
+                            </div>
+
+                            <div class="form-group checkbox-group">
+                                <input type="checkbox" th:field="*{scholarshipHolder}" id="scholarshipHolder"/>
+                                <label for="scholarshipHolder">Scholarship Holder</label>
+                                <div class="error" th:if="${#fields.hasErrors('scholarshipHolder')}" th:errors="*{scholarshipHolder}"></div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="email"><i class="zmdi zmdi-email"></i></label>
-                            <input type="email" name="email" id="email" placeholder="Your Email"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="pass"><i class="zmdi zmdi-lock"></i></label>
-                            <input type="password" name="password" id="pass" placeholder="Password"/>
-                        </div>
+
                         <div class="form-group form-button">
                             <input type="submit" name="signup" id="signup" class="form-submit" value="Register"/>
                         </div>
@@ -41,12 +166,11 @@
                 </div>
                 <div class="signup-image">
                     <figure><img th:src="@{/images/signup-image.jpg}" alt="sing up image"></figure>
-                    <a th:href="@{/login}" class="signup-image-link">I am already member</a>
+                    <a th:href="@{/login}" class="signup-image-link">I am already a member</a>
                 </div>
             </div>
         </div>
     </section>
-
 </div>
 
 <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
