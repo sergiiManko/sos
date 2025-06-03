@@ -40,7 +40,7 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body p-0">
-          <table class="table table-striped">
+          <table class="table table-striped" th:if="${grades.size() > 0}">
             <thead>
             <tr>
               <th style="width: 10px">#</th>
@@ -52,42 +52,14 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>1</td>
-              <td>Technical Writing</td>
-              <td>mgr. John Doe</td>
-              <td>5.0</td>
-              <td>Some comment</td>
+            <tr th:each="grade, iStat : ${grades}">
+              <td th:text="${iStat.index + 1 + (currentPage * 5)}"></td>
+              <td th:text="${grade.subjectName}"></td>
+              <td th:text="${grade.teacher.fullName}"></td>
+              <td th:text="${grade.score}"></td>
+              <td th:text="${#strings.abbreviate(grade.comments, 50)}"></td>
               <td class="project-actions text-right">
-                <a class="btn btn-primary btn-sm" href="#">
-                  <i class="fas fa-folder">
-                  </i>
-                  View
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Intro to Computer Science</td>
-              <td>Dr. Smith Kol</td>
-              <td>4.0</td>
-              <td>Some comment</td>
-              <td class="project-actions text-right">
-                <a class="btn btn-primary btn-sm" href="#">
-                  <i class="fas fa-folder">
-                  </i>
-                  View
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Linear Algebra</td>
-              <td>Dr. Johnson Red</td>
-              <td>4.5</td>
-              <td>Some comment</td>
-              <td class="project-actions text-right">
-                <a class="btn btn-primary btn-sm" href="#">
+                <a class="btn btn-primary btn-sm" th:href="@{'/student/grades/' + ${grade.id}}">
                   <i class="fas fa-folder">
                   </i>
                   View
@@ -96,14 +68,23 @@
             </tr>
             </tbody>
           </table>
+          <div class="text-center p-3" th:if="${grades.size() == 0}">
+            <h4>No grades available</h4>
+          </div>
         </div>
-        <div class="card-tools">
-          <ul class="pagination pagination-sm float-left">
-            <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+        <div class="card-footer clearfix" th:if="${totalPages > 0}">
+          <ul class="pagination pagination-sm m-0 float-right">
+            <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+              <a class="page-link" th:href="@{/student/grades(page=${currentPage - 1})}">&laquo;</a>
+            </li>
+            <li class="page-item" th:each="pageNumber : ${pageNumbers}"
+                th:classappend="${pageNumber == currentPage ? 'active' : ''}">
+              <a class="page-link" th:href="@{/student/grades(page=${pageNumber})}"
+                 th:text="${pageNumber + 1}"></a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+              <a class="page-link" th:href="@{/student/grades(page=${currentPage + 1})}">&raquo;</a>
+            </li>
           </ul>
         </div>
         <!-- /.card-body -->

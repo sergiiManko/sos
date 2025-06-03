@@ -63,3 +63,16 @@ SELECT setval('users_id_seq', 4000, false);
 SELECT setval('subject_id_seq', 5000, false);
 SELECT setval('enrollment_id_seq', 6000, false);
 SELECT setval('payment_id_seq', 2000, false);
+
+insert into transcript (semester, academic_year, grade_point_average, student_id)
+values (1, 2023, 4.5, 1);
+
+insert into transcript (semester, academic_year, grade_point_average, student_id)
+values (2, 2023, 4.2, 1);
+
+
+insert into grade (score, comments, grade_date, teacher_id, enrollment_id, transcript_id)
+values (4.5, 'excellent work on the final project', '2023-02-15', 2, 1, 1);
+
+insert into grade (score, comments, grade_date, teacher_id, enrollment_id, transcript_id)
+values (5.0, 'perfect score on all assignments', '2023-02-20', 2, 2, 1);
