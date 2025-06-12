@@ -7,11 +7,14 @@ import lombok.NoArgsConstructor;
 import pl.atins.domain.Enrollment;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class EnrollmentDTO {
     private Long id;
     private LocalDate enrollmentDate;
@@ -31,5 +34,15 @@ public class EnrollmentDTO {
                 .subject(SubjectDTO.fromEntity(enrollment.getSubject()))
                 .studentId(enrollment.getStudent() != null ? enrollment.getStudent().getId() : null)
                 .build();
+    }
+
+    public static List<EnrollmentDTO> fromEntities(List<Enrollment> enrollments) {
+        if (enrollments == null || enrollments.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return enrollments.stream()
+                .map(EnrollmentDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 }

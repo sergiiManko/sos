@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SOS | Enrolled Students</title>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
+    <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}"/>
+    <link rel="stylesheet"
+          href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+    <link rel="stylesheet" th:href="@{/adminlte/dist/css/adminlte.min.css}"/>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <div th:replace="~{header.html :: header}"></div>
+    <div th:replace="~{menu.html :: menu}"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 th:text="${subject.name + ' - Enrolled Students'}">Subject - Enrolled Students</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/teacher/subjects}">My Subjects</a></li>
+                            <li class="breadcrumb-item active">Enrolled Students</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <!-- Alert for success message -->
+                <div class="alert alert-success alert-dismissible" th:if="${successMessage}">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="icon fas fa-check"></i> Success!</h5>
+                    <span th:text="${successMessage}"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Students Enrolled in <span th:text="${subject.name}">Subject Name</span></h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div th:if="${enrolledStudents.isEmpty()}" class="alert alert-info">
+                                    No students are currently enrolled in this subject.
+                                </div>
+                                <table class="table table-bordered table-striped" th:if="${!enrolledStudents.isEmpty()}">
+                                    <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Student Number</th>
+                                        <th>Faculty</th>
+                                        <th>Specialization</th>
+                                        <th>Enrollment Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="student : ${enrolledStudents}">
+                                        <td th:text="${student.studentFullName}">Student Name</td>
+                                        <td th:text="${student.studentNumber}">S12345</td>
+                                        <td th:text="${student.faculty}">Faculty</td>
+                                        <td th:text="${student.specialization}">Specialization</td>
+                                        <td th:text="${#temporals.format(student.enrollmentDate, 'dd-MM-yyyy')}">01-01-2023</td>
+                                        <td>
+                                            <a th:href="@{'/teacher/grades/add?subjectId=' + ${subject.id} + '&studentId=' + ${student.studentId} + '&enrollmentId=' + ${student.enrollmentId}}"
+                                               class="btn btn-primary btn-sm">
+                                                <i class="fas fa-plus"></i> Add Grade
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                <a th:href="@{/teacher/subjects}" class="btn btn-secondary">Back to Subjects</a>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div th:replace="~{footer.html :: footer}"></div>
+</div>
+</body>
+<th:block th:insert="~{script::content}">&nbsp;</th:block>
+</html>

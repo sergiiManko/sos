@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <div th:fragment="header">
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -11,6 +12,9 @@
             </li>
             <li class="nav-item d-none d-sm-inline-block">
                 <a th:href="@{/}" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block" sec:authorize="hasRole('ROLE_TEACHER')">
+                <a th:href="@{/teacher/subjects}" class="nav-link">My Subjects</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
                 <a th:href="@{/logout}" class="nav-link">Logout</a>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SOS | Teacher Subjects</title>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
+    <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}"/>
+    <link rel="stylesheet"
+          href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+    <link rel="stylesheet" th:href="@{/adminlte/dist/css/adminlte.min.css}"/>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <div th:replace="~{header.html :: header}"></div>
+    <div th:replace="~{menu.html :: menu}"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>My Subjects</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">My Subjects</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Subjects I'm Teaching</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div th:if="${subjects.isEmpty()}" class="alert alert-info">
+                                    You are not assigned to any subjects yet.
+                                </div>
+                                <table class="table table-bordered table-striped" th:if="${!subjects.isEmpty()}">
+                                    <thead>
+                                    <tr>
+                                        <th>Subject Name</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="subject : ${subjects}">
+                                        <td th:text="${subject.name}">Subject Name</td>
+                                        <td th:text="${subject.type}">Type</td>
+                                        <td th:text="${subject.description}">Description</td>
+                                        <td>
+                                            <a th:href="@{'/teacher/subjects/' + ${subject.id} + '/students'}" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-users"></i> View Students
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div th:replace="~{footer.html :: footer}"></div>
+</div>
+</body>
+<th:block th:insert="~{script::content}">&nbsp;</th:block>
+</html>

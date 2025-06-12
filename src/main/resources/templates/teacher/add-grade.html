@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SOS | Add Grade</title>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
+    <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}"/>
+    <link rel="stylesheet"
+          href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+    <link rel="stylesheet" th:href="@{/adminlte/dist/css/adminlte.min.css}"/>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <div th:replace="~{header.html :: header}"></div>
+    <div th:replace="~{menu.html :: menu}"></div>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Add Grade</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/teacher/subjects}">My Subjects</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{'/teacher/subjects/' + ${subject.id} + '/students'}">Enrolled Students</a></li>
+                            <li class="breadcrumb-item active">Add Grade</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    Add Grade for <span th:text="${student.studentFullName}">Student Name</span>
+                                    in <span th:text="${subject.name}">Subject Name</span>
+                                </h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            <form method="post" th:action="@{/teacher/grades/add}" th:object="${gradeForm}">
+                                <div class="card-body">
+                                    <input type="hidden" th:field="*{subjectId}"/>
+                                    <input type="hidden" th:field="*{studentId}"/>
+                                    <input type="hidden" th:field="*{enrollmentId}"/>
+
+                                    <div class="form-group">
+                                        <label for="score">Score (1.0 - 5.0)</label>
+                                        <input type="number" class="form-control" id="score" th:field="*{score}" min="1.0" max="5.0" step="0.1" required>
+                                        <small class="text-danger" th:if="${#fields.hasErrors('score')}" th:errors="*{score}"></small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="comments">Comments</label>
+                                        <textarea class="form-control" id="comments" th:field="*{comments}" rows="3"></textarea>
+                                        <small class="text-danger" th:if="${#fields.hasErrors('comments')}" th:errors="*{comments}"></small>
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <a th:href="@{'/teacher/subjects/' + ${subject.id} + '/students'}" class="btn btn-secondary">Cancel</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div th:replace="~{footer.html :: footer}"></div>
+</div>
+</body>
+<th:block th:insert="~{script::content}">&nbsp;</th:block>
+</html>

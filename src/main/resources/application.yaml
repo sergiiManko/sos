@@ -15,7 +15,7 @@ spring:
         jdbc:
           batch_size: 10
         order_updates: true
-    open-in-view: false
+    open-in-view: true
   sendgrid:
     api-key: ${SENDGRID_API_KEY}
 server:

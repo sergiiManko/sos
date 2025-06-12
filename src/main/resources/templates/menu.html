@@ -38,7 +38,13 @@
                             <p>Enrollment</p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_TEACHER')">
+                        <a th:href="@{/teacher/subjects}" class="nav-link">
+                            <i class="nav-icon fas fa-chalkboard-teacher"></i>
+                            <p>My Subjects</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_STUDENT')">
                         <a th:href="@{/student/grades}" class="nav-link">
                         <i class="nav-icon fas fa-user-graduate"></i>
                             <p>Grades</p>

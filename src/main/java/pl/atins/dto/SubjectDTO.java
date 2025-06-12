@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import pl.atins.domain.Subject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,5 +45,15 @@ public class SubjectDTO {
                 .type(subject.getType())
                 .teachers(teacherDTOs)
                 .build();
+    }
+
+    public static List<SubjectDTO> fromEntities(List<Subject> subjects) {
+        if (subjects == null || subjects.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return subjects.stream()
+                .map(SubjectDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 }
