@@ -29,7 +29,8 @@ ON CONFLICT DO NOTHING;
 -- Link teachers to subjects
 INSERT INTO teacher_subject (teacher_id, subject_id)
 VALUES (2, 4000),
-       (2, 4001)
+       (2, 4001),
+       (2, 4003)
 ON CONFLICT DO NOTHING;
 
 INSERT INTO enrollment (id, enrollment_date, status, subject_id, student_id, created_at, updated_at)
@@ -66,10 +67,6 @@ SELECT setval('payment_id_seq', 2000, false);
 
 insert into transcript (semester, academic_year, grade_point_average, student_id)
 values (1, 2023, 4.5, 1);
-
-insert into transcript (semester, academic_year, grade_point_average, student_id)
-values (2, 2023, 4.2, 1);
-
 
 insert into grade (score, comments, grade_date, teacher_id, enrollment_id, transcript_id)
 values (4.5, 'excellent work on the final project', '2023-02-15', 2, 1, 1);

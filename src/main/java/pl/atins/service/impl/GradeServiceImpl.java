@@ -22,6 +22,7 @@ import pl.atins.service.StudentService;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -85,7 +86,18 @@ public class GradeServiceImpl implements GradeService {
         } else {
             transcript = transcripts.getFirst();
         }
-
+        if (gradeFormDTO.getGradeId() != null) {
+            Grade existingGrade = gradeRepository.findById(gradeFormDTO.getGradeId())
+                    .orElseThrow(() -> new NoSuchElementException("Grade not found with ID: " + gradeFormDTO.getGradeId()));
+            if (!existingGrade.getEnrollment().getId().equals(enrollment.getId())) {
+                throw new IllegalArgumentException("Grade does not belong to the specified enrollment");
+            }
+            existingGrade.setScore(gradeFormDTO.getScore());
+            existingGrade.setComments(gradeFormDTO.getComments());
+            existingGrade.setGradeDate(LocalDate.now());
+            gradeRepository.save(existingGrade);
+            return;
+        }
         Grade grade = new Grade();
         grade.setScore(gradeFormDTO.getScore());
         grade.setComments(gradeFormDTO.getComments());
@@ -99,5 +111,14 @@ public class GradeServiceImpl implements GradeService {
         transcript.addGrade(savedGrade);
         transcriptRepository.save(transcript);
 
+    }
+
+    @Override
+    public Optional<Grade> getExistingGrade(Long subjectId, Long studentId, Long enrollmentId) {
+        return gradeRepository.findByEnrollmentId(enrollmentId)
+                .filter(g ->
+                        g.getEnrollment().getSubject().getId().equals(subjectId) &&
+                                g.getTranscript().getStudent().getId().equals(studentId)
+                );
     }
 }

@@ -19,6 +19,7 @@ import pl.atins.service.UserService;
 @RequiredArgsConstructor
 public class UserController {
 
+    public static final String REDIRECT_USER_URL = "redirect:/users";
     private final UserService userService;
 
     @GetMapping
@@ -53,18 +54,18 @@ public class UserController {
         existingUser.setFirstName(user.getFirstName());
         existingUser.setLastName(user.getLastName());
         userService.saveUser(existingUser);
-        return "redirect:/users";
+        return REDIRECT_USER_URL;
     }
 
     @PostMapping("/{id}/enable")
     public String enableUser(@PathVariable Long id) {
         userService.enableUser(id);
-        return "redirect:/users";
+        return REDIRECT_USER_URL;
     }
 
     @PostMapping("/{id}/disable")
     public String disableUser(@PathVariable Long id) {
         userService.disableUser(id);
-        return "redirect:/users";
+        return REDIRECT_USER_URL;
     }
 }

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import pl.atins.domain.Enrollment;
+import pl.atins.domain.Grade;
+import pl.atins.domain.Student;
 import pl.atins.domain.Subject;
 import pl.atins.domain.Teacher;
 import pl.atins.dto.StudentEnrollmentDTO;
@@ -13,9 +15,9 @@ import pl.atins.repository.SubjectRepository;
 import pl.atins.repository.TeacherRepository;
 import pl.atins.service.TeacherService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +41,7 @@ public class TeacherServiceImpl implements TeacherService {
         List<Subject> subjects = subjectRepository.findByTeacher(teacher);
         return subjects.stream()
                 .map(SubjectDTO::fromEntity)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -50,8 +52,14 @@ public class TeacherServiceImpl implements TeacherService {
         List<Enrollment> enrollments = enrollmentRepository.findBySubjectAndStatus(subject, Enrollment.STATUS_ENROLLED);
 
         return enrollments.stream()
-                .map(enrollment -> StudentEnrollmentDTO.fromEntities(enrollment, enrollment.getStudent()))
-                .collect(Collectors.toList());
+                .map(enrollment -> {
+                    Student student = enrollment.getStudent();
+                    List<Grade> grades = student.getTranscript().getGrades();
+                    boolean hasGrade = grades.stream()
+                            .anyMatch(grade -> grade.getEnrollment().getSubject().equals(subject));
+                    return StudentEnrollmentDTO.fromEntities(enrollment, student, hasGrade);
+                })
+                .toList();
     }
 
     public List<SubjectDTO> getSubjectDTOS(Long subjectId, UserDetails userDetails) {
@@ -60,7 +68,7 @@ public class TeacherServiceImpl implements TeacherService {
 
         boolean hasAccess = subjects.stream().anyMatch(s -> s.getId().equals(subjectId));
         if (!hasAccess) {
-            return null;
+            return Collections.emptyList();
         }
         return subjects;
     }

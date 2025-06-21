@@ -41,12 +41,29 @@ public class TeacherGradeController {
             Model model) {
 
         List<SubjectDTO> subjects = teacherService.getSubjectDTOS(subjectId, userDetails);
-        if (subjects == null) return "redirect:/teacher/subjects";
+        if (subjects.isEmpty()) {
+            return "redirect:/teacher/subjects";
+        }
 
-        GradeFormDTO gradeFormDTO = new GradeFormDTO();
-        gradeFormDTO.setSubjectId(subjectId);
-        gradeFormDTO.setStudentId(studentId);
-        gradeFormDTO.setEnrollmentId(enrollmentId);
+        GradeFormDTO gradeFormDTO = gradeService
+                .getExistingGrade(subjectId, studentId, enrollmentId)
+                .map(g -> {
+                    GradeFormDTO dto = new GradeFormDTO();
+                    dto.setGradeId(g.getId());
+                    dto.setSubjectId(subjectId);
+                    dto.setStudentId(studentId);
+                    dto.setEnrollmentId(enrollmentId);
+                    dto.setScore(g.getScore());
+                    dto.setComments(g.getComments());
+                    return dto;
+                })
+                .orElseGet(() -> {
+                    GradeFormDTO dto = new GradeFormDTO();
+                    dto.setSubjectId(subjectId);
+                    dto.setStudentId(studentId);
+                    dto.setEnrollmentId(enrollmentId);
+                    return dto;
+                });
 
         SubjectDTO subject = subjects.stream()
                 .filter(s -> s.getId().equals(subjectId))

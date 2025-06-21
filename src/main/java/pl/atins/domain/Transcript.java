@@ -4,9 +4,10 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,13 +15,17 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "transcript")
+@Table(name = "transcript",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"student_id","semester","academic_year"})
+        })
 public class Transcript extends BaseEntity {
 
     @Column(nullable = false)
@@ -32,8 +37,8 @@ public class Transcript extends BaseEntity {
     @Column(name = "grade_point_average")
     private Double gradePointAverage;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "student_id", nullable = false, unique = true)
     private Student student;
 
     @OneToMany(mappedBy = "transcript", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -42,12 +47,6 @@ public class Transcript extends BaseEntity {
     public void addGrade(Grade grade) {
         grades.add(grade);
         grade.setTranscript(this);
-        recalculateGPA();
-    }
-
-    public void removeGrade(Grade grade) {
-        grades.remove(grade);
-        grade.setTranscript(null);
         recalculateGPA();
     }
 
@@ -61,5 +60,18 @@ public class Transcript extends BaseEntity {
                 .mapToDouble(Grade::getScore)
                 .sum();
         this.gradePointAverage = sum / grades.size();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Transcript that = (Transcript) o;
+        return Objects.equals(semester, that.semester) && Objects.equals(academicYear, that.academicYear) && Objects.equals(gradePointAverage, that.gradePointAverage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), semester, academicYear, gradePointAverage);
     }
 }

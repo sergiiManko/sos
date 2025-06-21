@@ -72,10 +72,17 @@
                                         <td th:text="${student.faculty}">Faculty</td>
                                         <td th:text="${student.specialization}">Specialization</td>
                                         <td th:text="${#temporals.format(student.enrollmentDate, 'dd-MM-yyyy')}">01-01-2023</td>
-                                        <td>
+                                        <td th:if="${student.gradeId == null}">
                                             <a th:href="@{'/teacher/grades/add?subjectId=' + ${subject.id} + '&studentId=' + ${student.studentId} + '&enrollmentId=' + ${student.enrollmentId}}"
                                                class="btn btn-primary btn-sm">
                                                 <i class="fas fa-plus"></i> Add Grade
+                                            </a>
+                                        </td>
+                                        <td th:if="${student.gradeId != null}">
+                                            <a
+                                                    th:href="@{'/teacher/grades/add?subjectId=' + ${subject.id} + '&studentId=' + ${student.studentId} + '&enrollmentId=' + ${student.enrollmentId}}"
+                                               class="btn btn-primary btn-sm">
+                                                <i class="fas fa-edit"></i> Edit Grade
                                             </a>
                                         </td>
                                     </tr>

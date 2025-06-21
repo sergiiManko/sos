@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GradeFormDTO {
 
+    private Long gradeId;
+
     @NotNull(message = "Score is required")
     @DecimalMin(value = "1.0", message = "Score must be at least 1.0")
     @DecimalMax(value = "5.0", message = "Score cannot be more than 5.0")
