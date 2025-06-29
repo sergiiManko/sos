@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import pl.atins.service.RoleBasedAuthenticationSuccessHandler;
 
 /**
  * @author Serhii Manko
@@ -20,13 +21,20 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private final RoleBasedAuthenticationSuccessHandler successHandler;
+
+    public SecurityConfig(RoleBasedAuthenticationSuccessHandler successHandler) {
+        this.successHandler = successHandler;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/login/error", "/register", "/forgetPassword").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/icons/**", "/fonts/**", "/vendor/**", "/adminlte/**").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/icons/**", "/fonts/**", "/vendor/**", "/adminlte/**")
+                        .permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/enrollments/**").hasRole("STUDENT")
                         .anyRequest().authenticated()
@@ -46,7 +54,7 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
+                        .successHandler(successHandler)
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )

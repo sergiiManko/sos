@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SOS | Dashboard</title>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
+    <link rel="stylesheet" th:href="@{/adminlte/plugins/fontawesome-free/css/all.min.css}"/>
+    <link rel="stylesheet"
+          href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+    <link rel="stylesheet" th:href="@{/adminlte/dist/css/adminlte.min.css}"/>
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <div th:replace="~{header.html :: header}"></div>
+    <div th:replace="~{menu.html :: menu}"></div>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 th:text="${'Dashboard' + ' - ' + userRole}"></h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Home</a></li>
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <!-- Students box -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <h3 th:text="${studentCount}">0</h3>
+                            <p>Total Students</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">
+                            More info <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Teachers box -->
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-secondary">
+                        <div class="inner">
+                            <h3 th:text="${teacherCount}">0</h3>
+                            <p>Total Teachers</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <a href="#" class="small-box-footer">
+                            More info <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div th:replace="~{footer.html :: footer}"></div>
+</div>
+<th:block th:insert="~{script::content}">&nbsp;</th:block>
+</body>
+</html>

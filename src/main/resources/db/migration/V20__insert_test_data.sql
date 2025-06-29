@@ -16,6 +16,10 @@ VALUES (1, 'S001234', 'Computer Science', 'Software Engineering', 3, 2022, 1, 'F
         '2026-06-30', 4.5, 'AGR-001', 1000)
 ON CONFLICT DO NOTHING;
 
+INSERT INTO admin (id, description)
+VALUES (3, 'Admin User')
+ON CONFLICT DO NOTHING;
+
 -- Insert test subjects
 INSERT INTO subject (id, name, description, type, created_at, updated_at)
 VALUES (4000, 'Introduction to Programming', 'Fundamentals of programming using Java', 'LECTURE', now(), now()),

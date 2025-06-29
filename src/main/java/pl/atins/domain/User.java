@@ -1,6 +1,15 @@
 package pl.atins.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -59,7 +68,7 @@ public abstract class User extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.accountNonLocked;
     }
 
     @Override
@@ -74,7 +83,7 @@ public abstract class User extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
 
     @Override

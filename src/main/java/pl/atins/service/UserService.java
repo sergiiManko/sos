@@ -10,4 +10,8 @@ public interface UserService {
     void saveUser(User user);
     void enableUser(Long id);
     void disableUser(Long id);
+
+    long countStudents();
+
+    long countTeachers();
 }

@@ -17,4 +17,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Query("UPDATE User u SET u.failedAttempt = 0, u.lockTime = null, u.accountNonLocked = true WHERE u.id = :userId")
     void unlockUser(Long userId);
+
+    @Query("select count(s) from Student s")
+    long countStudents();
+
+    @Query("select count(t) from Teacher t")
+    long countTeachers();
 }

@@ -60,17 +60,19 @@
                             <td th:text="${user.role != null ? user.role.name : ''}"></td>
                             <td>
                                 <span th:if="${user.isEnabled()}" class="badge bg-success">Active</span>
-                                <span th:unless="${user.isEnabled()}" class="badge bg-danger">Disabled</span>
+                                <span th:if="${!user.isEnabled()}" class="badge bg-danger">Disabled</span>
                             </td>
                             <td>
                                 <div class="btn-group">
                                     <a th:href="@{/users/{id}/edit(id=${user.id})}" class="btn btn-sm btn-primary">Edit</a>
 
-                                    <form th:if="${user.enabled}" th:action="@{/users/{id}/disable(id=${user.id})}" method="post" class="d-inline">
+                                    <form th:if="${user.enabled && user.id != currentUserId}" th:action="@{/users/{id}/disable(id=${user.id})}" method="post"
+                                          class="d-inline">
                                         <button type="submit" class="btn btn-sm btn-warning">Disable</button>
                                     </form>
 
-                                    <form th:unless="${user.enabled}" th:action="@{/users/{id}/enable(id=${user.id})}" method="post" class="d-inline">
+                                    <form th:if="${!user.enabled}"
+                                          th:action="@{/users/{id}/enable(id=${user.id})}" method="post" class="d-inline">
                                         <button type="submit" class="btn btn-sm btn-success">Enable</button>
                                     </form>
                                 </div>

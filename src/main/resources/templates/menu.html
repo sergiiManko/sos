@@ -51,25 +51,25 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a th:href="@{/schedule}" class="nav-link">
+                        <a th:href="@{/schedule}" class="nav-link" sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER')">
                         <i class="nav-icon fas fa-calendar"></i>
                             <p>Schedule</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a th:href="@{/payments}" class="nav-link">
+                        <a th:href="@{/payments}" class="nav-link" sec:authorize="hasRole('ROLE_STUDENT')">
                         <i class="nav-icon fas fa-file-invoice-dollar"></i>
                             <p>Payments</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a th:href="@{/library}" class="nav-link">
+                        <a th:href="@{/library}" class="nav-link" sec:authorize="hasAnyRole('ROLE_STUDENT','ROLE_TEACHER')">
                             <i class="nav-icon fas fa-book"></i>
                             <p>Library</p>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a th:href="@{/users}" class="nav-link">
+                        <a th:href="@{/users}" class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')">
                             <i class="nav-icon fas fa-users"></i>
                             <p>Users</p>
                         </a>

@@ -49,4 +49,14 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(false);
         userRepository.save(user);
     }
+
+    @Override
+    public long countStudents() {
+        return userRepository.countStudents();
+    }
+
+    @Override
+    public long countTeachers() {
+        return userRepository.countTeachers();
+    }
 }
