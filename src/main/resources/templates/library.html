@@ -53,37 +53,30 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>1</td>
-              <td>Clean code</td>
-              <td>10/05/2025</td>
-              <td>20/05/2025</td>
-              <td>18/05/2025</td>
-              <td><span class="badge bg-success">Returned</span></td>
+            <tr th:each="loan, stat : ${loans}">
+              <td th:text="${stat.count}">1</td>
+              <td th:text="${loan.bookTitle}">Clean Code</td>
+              <td th:text="${#temporals.format(loan.loanDate, 'dd/MM/yyyy')}">10/05/2025</td>
+              <td th:text="${#temporals.format(loan.dueDate,  'dd/MM/yyyy')}">20/05/2025</td>
+              <td th:text="${loan.returnDate != null
+                ? #temporals.format(loan.returnDate,'dd/MM/yyyy') : '-'}">
+                18/05/2025
+              </td>
+              <td>
+      <span th:classappend="${loan.returnDate != null}
+                            ? 'badge bg-success' : 'badge bg-warning'"
+            th:text="${loan.returnDate != null}
+                     ? 'Returned' : 'In Use'">
+        Returned
+      </span>
+              </td>
               <td class="project-actions text-center">
-                <a class="btn btn-primary btn-sm" href="#">
-                  <i class="fas fa-folder">
-                  </i>
-                  View
+                <a th:href="@{'/library/loan/' + ${loan.id}}"
+                   class="btn btn-primary btn-sm">
+                  <i class="fas fa-folder"></i> View
                 </a>
               </td>
             </tr>
-            <tr>
-              <td>1</td>
-              <td>Clean arcitecture</td>
-              <td>11/04/2025</td>
-              <td>22/04/2025</td>
-              <td>19/04/2025</td>
-              <td><span class="badge bg-warning">in use</span></td>
-              <td class="project-actions text-center">
-                <a class="btn btn-primary btn-sm" href="#">
-                  <i class="fas fa-folder">
-                  </i>
-                  View
-                </a>
-              </td>
-            </tr>
-
             </tbody>
           </table>
         </div>

@@ -77,3 +77,13 @@ values (4.5, 'excellent work on the final project', '2023-02-15', 2, 1, 1);
 
 insert into grade (score, comments, grade_date, teacher_id, enrollment_id, transcript_id)
 values (5.0, 'perfect score on all assignments', '2023-02-20', 2, 2, 1);
+
+insert into book(title, author, isbn, category, status)
+values ('Clean code', 'Robert C. Martin', '978-0132350884', 'Programming', 'returned'),
+       ('Introduction to Algorithms', 'Thomas H. Cormen', '978-0262033848', 'Algorithms', 'in use'),
+       ('The Art of Computer Programming', 'Donald E. Knuth', '978-0201896831', 'Computer Science', 'returned');
+
+insert into loan(due_date, loan_date, return_date, status, student_id, book_id)
+values ('2024-10-01', '2024-09-01', '2024-09-15', 'returned', 1, 1),
+       ('2025-09-01', '2025-07-01', null, 'in use', 1, 2),
+       ('2023-12-01', '2023-11-01', '2023-11-20', 'returned', 1, 3);
