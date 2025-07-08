@@ -1,6 +1,8 @@
 package pl.atins.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,4 +25,8 @@ public class Payment extends BaseEntity {
     private String referenceCode;
     private String status;
     private String title;
+
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = false)
+    private Student student;
 }

@@ -8,7 +8,8 @@ VALUES ('Jan', 'Kowalski', 'jan.kowalski@example.com', '$2a$10$ng4PAiMZ55jL8rjHT
        ('Maria', 'Nowak', 'maria.nowak@example.com', '$2a$10$3KO10/E7/T8q5wwL.luQa.RW76BZsslpYCl7S57K8LnNWL42AfQje',
         2, 'TEACHER'),
        ('John', 'Doe', 'john.doe@example.com', '$2a$10$3KO10/E7/T8q5wwL.luQa.RW76BZsslpYCl7S57K8LnNWL42AfQje',
-        1, 'ADMIN');
+        1, 'ADMIN'),
+       ('Orlen', 'Vitay', 'orlen.vitay@example.com', '$2a$10$ng4PAiMZ55jL8rjHTnXNDORGi1dTNPxX1NEzph/RUurVID7SanuN.', 3, 'STUDENT');
 
 -- Password for Jan Kowalski: xt34Ws78
 -- Password for Maria Nowak: pl4RwE02L
